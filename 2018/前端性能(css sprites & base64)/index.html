@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>前端性能(css sprites&amp;base64) | zuichu</title>
+  <title>前端性能(图片优化) | zuichu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="MinHow,MinHow's Blog" />
@@ -11,14 +11,14 @@
   <meta name="description" content="前情概要近期打算好好写一些工作中遇到的一些东西，又想着高质量的文章，一直不知道如何开头，这个头要开的好，绞尽脑汁，前几天才遇到一个前端浏览器的性能问题，当断不断必自乱，就来搞下前端优化的一些东西好了，首先是关于图片的的处理，css 雪碧图和base64格式图片。都是通过减少http请求从而达到性能优化的目的，请求变少了，那么加载起来就变快了，自然看起来就很清爽了。  Css Sprites CSS">
 <meta name="keywords" content="JavaScript 前端性能">
 <meta property="og:type" content="article">
-<meta property="og:title" content="前端性能(css sprites&amp;base64)">
+<meta property="og:title" content="前端性能(图片优化)">
 <meta property="og:url" content="http://yoursite.com/2018/前端性能(css sprites & base64)/index.html">
 <meta property="og:site_name" content="zuichu">
 <meta property="og:description" content="前情概要近期打算好好写一些工作中遇到的一些东西，又想着高质量的文章，一直不知道如何开头，这个头要开的好，绞尽脑汁，前几天才遇到一个前端浏览器的性能问题，当断不断必自乱，就来搞下前端优化的一些东西好了，首先是关于图片的的处理，css 雪碧图和base64格式图片。都是通过减少http请求从而达到性能优化的目的，请求变少了，那么加载起来就变快了，自然看起来就很清爽了。  Css Sprites CSS">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-29T07:44:59.862Z">
+<meta property="og:updated_time" content="2018-08-29T08:14:56.357Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="前端性能(css sprites&amp;base64)">
+<meta name="twitter:title" content="前端性能(图片优化)">
 <meta name="twitter:description" content="前情概要近期打算好好写一些工作中遇到的一些东西，又想着高质量的文章，一直不知道如何开头，这个头要开的好，绞尽脑汁，前几天才遇到一个前端浏览器的性能问题，当断不断必自乱，就来搞下前端优化的一些东西好了，首先是关于图片的的处理，css 雪碧图和base64格式图片。都是通过减少http请求从而达到性能优化的目的，请求变少了，那么加载起来就变快了，自然看起来就很清爽了。  Css Sprites CSS">
   
   
@@ -111,7 +111,7 @@
         
   
     <h1 class="post-title" itemprop="name">
-      前端性能(css sprites&amp;base64)
+      前端性能(图片优化)
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -160,14 +160,17 @@
 <li>体积会比原来的图片大一点。</li>
 <li>css中过多使用base64图片会使得css过大，不利于css的加载。</li>
 </ul>
+<h3 id="webP"><a href="#webP" class="headerlink" title="webP"></a>webP</h3><blockquote>
+<p>WebP格式，谷歌（google）开发的一种旨在加快图片加载速度的图片格式。图片压缩体积大约只有JPEG的2/3，并能节省大量的服务器宽带资源和数据空间。Facebook Ebay等知名网站已经开始测试并使用WebP格式。<br>  WebP既支持有损压缩也支持无损压缩。相较编码JPEG文件，编码同样质量的WebP文件需要占用更多的计算资源。</p>
+</blockquote>
 <h3 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h3><blockquote>
-<p>上面说的两个处理图片共同点是都是应用于小图片，都能减少请求数，但并不是所有的图片都适用，尺寸大的图片就不应使用。两种方式都有利有弊，应该适应场景使用，权衡利弊，方可将这两种方法能力发挥好。</p>
+<p>上面说的两个处理图片共同点是都是应用于小图片，都能减少请求数，但并不是所有的图片都适用，尺寸大的图片就不应使用。两种方式都有利有弊，应该适应场景使用，权衡利弊，方可将这两种方法能力发挥好。最后是以后图片发展的趋势，是将图片压缩，压缩红藕的图片体积比原图体积大大减少，自然传输占用资源就变少了很多。</p>
 </blockquote>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年08月29日 15:44</p>
-        <p>原始链接： <a class="post-url" href="/2018/前端性能(css sprites & base64)/" title="前端性能(css sprites&amp;base64)">http://yoursite.com/2018/前端性能(css sprites &amp; base64)/</a></p>
+        <p>最后更新： 2018年08月29日 16:14</p>
+        <p>原始链接： <a class="post-url" href="/2018/前端性能(css sprites & base64)/" title="前端性能(图片优化)">http://yoursite.com/2018/前端性能(css sprites &amp; base64)/</a></p>
         <footer>
             <a href="http://yoursite.com">
                 <img src="/images/logo.png" alt="mengjintao">
@@ -224,7 +227,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/前端性能(css sprites & base64)/&title=《前端性能(css sprites&base64)》 — zuichu&pic=https://mengjt713.github.io/images/qianduanxingneng.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/前端性能(css sprites & base64)/&title=《前端性能(图片优化)》 — zuichu&pic=https://mengjt713.github.io/images/qianduanxingneng.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -234,7 +237,7 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/前端性能(css sprites & base64)/&title=《前端性能(css sprites&base64)》 — zuichu&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/前端性能(css sprites & base64)/&title=《前端性能(图片优化)》 — zuichu&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
@@ -244,7 +247,7 @@
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端性能(css sprites&base64)》 — zuichu&url=http://yoursite.com/2018/前端性能(css sprites & base64)/&via=http://yoursite.com" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端性能(图片优化)》 — zuichu&url=http://yoursite.com/2018/前端性能(css sprites & base64)/&via=http://yoursite.com" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -284,26 +287,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#前情概要"><span class="post-toc-text">前情概要</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Css-Sprites"><span class="post-toc-text">Css Sprites</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#基本原理"><span class="post-toc-text">基本原理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#好处"><span class="post-toc-text">好处</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点"><span class="post-toc-text">缺点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#举例"><span class="post-toc-text">举例</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#base64"><span class="post-toc-text">base64</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#生成base64编码："><span class="post-toc-text">生成base64编码：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#好处-1"><span class="post-toc-text">好处</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点-1"><span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最后的最后"><span class="post-toc-text">最后的最后</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#前情概要"><span class="post-toc-text">前情概要</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Css-Sprites"><span class="post-toc-text">Css Sprites</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#基本原理"><span class="post-toc-text">基本原理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#好处"><span class="post-toc-text">好处</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点"><span class="post-toc-text">缺点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#举例"><span class="post-toc-text">举例</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#base64"><span class="post-toc-text">base64</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#生成base64编码："><span class="post-toc-text">生成base64编码：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#好处-1"><span class="post-toc-text">好处</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点-1"><span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#webP"><span class="post-toc-text">webP</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最后的最后"><span class="post-toc-text">最后的最后</span></a></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2018/JSmap用法/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          JSmap用法
-        
-      </span>
-    </a>
   
-  
-    <a href="/2018/2018第一篇博客/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">2018年第一篇博客</span>
+    <a href="/2018/JSmap用法/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">JSmap用法</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
