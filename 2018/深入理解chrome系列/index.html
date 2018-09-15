@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入理解chrome之最大内存占用 | zuichu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="MinHow,MinHow's Blog" />
+  
+  <meta name="description" content="前情概要说起来这也是最近调试chrom浏览器遇到的问题，一度怀疑是页面自身的问题，深究了好久，其实也是页面自身的问题，内存泄露严重，导致发现chrome浏览器的单窗口页面打开占用最大内存竟然是这么点儿。可算是功夫不负有心人，在这上面真的是耗费了很大的精力，差点儿在此吐血身亡—-  内存泄露 javascript具有自动垃圾收集机制，也就是说，执行环境会负责管理代码执行过程中的使用的内存。而在C和C">
+<meta name="keywords" content="前端性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解chrome之最大内存占用">
+<meta property="og:url" content="http://yoursite.com/2018/深入理解chrome系列/index.html">
+<meta property="og:site_name" content="zuichu">
+<meta property="og:description" content="前情概要说起来这也是最近调试chrom浏览器遇到的问题，一度怀疑是页面自身的问题，深究了好久，其实也是页面自身的问题，内存泄露严重，导致发现chrome浏览器的单窗口页面打开占用最大内存竟然是这么点儿。可算是功夫不负有心人，在这上面真的是耗费了很大的精力，差点儿在此吐血身亡—-  内存泄露 javascript具有自动垃圾收集机制，也就是说，执行环境会负责管理代码执行过程中的使用的内存。而在C和C">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-15T08:25:20.758Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解chrome之最大内存占用">
+<meta name="twitter:description" content="前情概要说起来这也是最近调试chrom浏览器遇到的问题，一度怀疑是页面自身的问题，深究了好久，其实也是页面自身的问题，内存泄露严重，导致发现chrome浏览器的单窗口页面打开占用最大内存竟然是这么点儿。可算是功夫不负有心人，在这上面真的是耗费了很大的精力，差点儿在此吐血身亡—-  内存泄露 javascript具有自动垃圾收集机制，也就是说，执行环境会负责管理代码执行过程中的使用的内存。而在C和C">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">最初</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>归档</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>关于我</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        最初
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一切从最初开始
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="MinHow" target="_blank" href="//minhow.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/mengjt713">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-2018/深入理解chrome系列" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      深入理解chrome之最大内存占用
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2018-09-15
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="前情概要"><a href="#前情概要" class="headerlink" title="前情概要"></a>前情概要</h3><p>说起来这也是最近调试chrom浏览器遇到的问题，一度怀疑是页面自身的问题，深究了好久，其实也是页面自身的问题，内存泄露严重，导致发现chrome浏览器的单窗口页面打开占用最大内存竟然是这么点儿。可算是功夫不负有心人，在这上面真的是耗费了很大的精力，差点儿在此吐血身亡—-</p>
+<hr>
+<h3 id="内存泄露"><a href="#内存泄露" class="headerlink" title="内存泄露"></a>内存泄露</h3><blockquote>
+<p>javascript具有自动垃圾收集机制，也就是说，执行环境会负责管理代码执行过程中的使用的内存。而在C和C++之类的语言中，开发人员的一项基本任务就是手动跟踪内存的使用情况，这是造成许多问题的一个根源。在编写javascript程序时候，开发人员不用再关心内存使用的问题，所需内存的分配 以及无用的回收完全实现了自动管理。</p>
+</blockquote>
+<p>JavaScript中最常用的垃圾收集方式是标记清除(mark-and-sweep)。当变量进入环境（例如，在函数中声明一个变量）时，就将这个变量标记为“进入环境”。从逻辑上讲，永远不能去释放进入环境的变量所占的内存，因为只要执行流进入相应的环境，就有可能用到它们。而当变量离开环境时，这将其 标记为“离开环境”，离开环境垃圾回收GC机制会将变量释放掉。</p>
+<h4 id="常见内存泄露原因"><a href="#常见内存泄露原因" class="headerlink" title="常见内存泄露原因"></a>常见内存泄露原因</h4><p>虽然JavaScript 会自动垃圾收集，无需关心如何释放变量，但是由于我们的代码写法不当，会让变量一直处于“进入环境”的状态，无法被回收，释放。列举一些常见的内存泄露：</p>
+<h5 id="意外的全局变量引起内存泄露"><a href="#意外的全局变量引起内存泄露" class="headerlink" title="意外的全局变量引起内存泄露"></a>意外的全局变量引起内存泄露</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function isTrue()&#123;</span><br><span class="line">    isTrue = &apos;true&apos;; //isTrue升级变为全局变量</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var getData = (function ()&#123;</span><br><span class="line"></span><br><span class="line">    var myData = &apos;XXXXXXXX&apos;; //isTrue升级变为全局变量</span><br><span class="line">    return function()&#123;</span><br><span class="line">        console.log(myData);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line">推荐一个描述闭包的博客，讲的挺透彻的：https://blog.hhking.cn/2018/09/08/i-never-understood-javascript-closures/</span><br></pre></td></tr></table></figure>
+<h5 id="DOM泄露"><a href="#DOM泄露" class="headerlink" title="DOM泄露"></a>DOM泄露</h5><p>当原有的COM被移除时，子结点引用没有被移除则无法回收。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var select = document.querySelector;</span><br><span class="line">var treeRef = select(&apos;#tree&apos;); //在COM树中leafRef是treeFre的一个子结点</span><br><span class="line">var leafRef = select(&apos;#leaf&apos;);</span><br><span class="line">var body = select(&apos;body&apos;);</span><br><span class="line">body.removeChild(treeRef); //#tree不能被回收入，因为treeRef还在</span><br></pre></td></tr></table></figure>
+<h4 id="模拟内存泄露"><a href="#模拟内存泄露" class="headerlink" title="模拟内存泄露"></a>模拟内存泄露</h4><p>-在网上撸一段内存泄露的代码，在chrome浏览器中跑一会儿，马上就会看到，浏览器崩溃的页面。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var theThing = null</span><br><span class="line">var replaceThing = function () &#123;</span><br><span class="line">    var originalThing = theThing</span><br><span class="line">    var unused = function () &#123;</span><br><span class="line">        if (originalThing)</span><br><span class="line">            console.log(&quot;hi&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">    theThing = &#123;</span><br><span class="line">        longStr: new Array(10000000).join(&apos;*&apos;),</span><br><span class="line">        someMethod: function () &#123;</span><br><span class="line">            console.log(&apos;someMessage&apos;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">setInterval(replaceThing, 50)</span><br></pre></td></tr></table></figure></p>
+<h3 id="干货来了"><a href="#干货来了" class="headerlink" title="干货来了"></a>干货来了</h3><p>导致问题出现的原因的罪魁祸首就是内存泄露。由于跟踪整个问题，导致好几天没有睡好觉，客户那边的催的紧，一开始没有发现问题的所在，最后发现了一个规律，在前一天晚上，服务器上将一个有可视化页面的chrome的窗口打开，到第二天早上毫无意外的发现chrome窗口的可视化页面变成黑屏，点击页面无任何响应，终于在第三天发现一个瞬间，chrome窗口突然无响应，然后出现页面崩溃字样，由于计算机设置了高对比度，导致崩溃页面本来是白色的额，看起来变成黑色的了。</p>
+<p>于是转战研究chrome浏览器页面崩溃原因。在chrome 56版本发现，当页面运行内存到达1.4G左右时候页面出现卡顿，紧接着弹出页面崩溃字样，在chrome 64的高版本中发现页面运行内存可以达到3.5G开始出现卡顿，崩溃现象。于是问题迎刃而解，升级chrome的版本吧。</p>
+<p>这时候回过头来看，一个页面最后占用的运行内存到1.4G多么可怕的内存泄露，看来页面优化势在必行，必须改造再改造。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2018年09月15日 16:25</p>
+        <p>原始链接： <a class="post-url" href="/2018/深入理解chrome系列/" title="深入理解chrome之最大内存占用">http://yoursite.com/2018/深入理解chrome系列/</a></p>
+        <footer>
+            <a href="http://yoursite.com">
+                <img src="/images/logo.png" alt="mengjintao">
+                mengjintao
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/深入理解chrome系列/&title=《深入理解chrome之最大内存占用》 — zuichu&pic=https://mengjt713.github.io/images/chrome.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/深入理解chrome系列/&title=《深入理解chrome之最大内存占用》 — zuichu&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/深入理解chrome系列/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入理解chrome之最大内存占用》 — zuichu&url=http://yoursite.com/2018/深入理解chrome系列/&via=http://yoursite.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/深入理解chrome系列/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2018/深入理解chrome系列/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/前端性能/" class="color5">前端性能</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#前情概要"><span class="post-toc-text">前情概要</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#内存泄露"><span class="post-toc-text">内存泄露</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#常见内存泄露原因"><span class="post-toc-text">常见内存泄露原因</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#意外的全局变量引起内存泄露"><span class="post-toc-text">意外的全局变量引起内存泄露</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#闭包"><span class="post-toc-text">闭包</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#DOM泄露"><span class="post-toc-text">DOM泄露</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#模拟内存泄露"><span class="post-toc-text">模拟内存泄露</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#干货来了"><span class="post-toc-text">干货来了</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2018/前端性能(css sprites & base64)/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">前端性能(图片优化)</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2018 mengjintao<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://yoursite.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/JavaScript-前端性能/" style="font-size: 10px;">JavaScript 前端性能</a> <a href="/tags/前端性能/" style="font-size: 10px;">前端性能</a> <a href="/tags/感悟/" style="font-size: 10px;">感悟</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>归档</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>关于我</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/JavaScript-前端性能/" style="font-size: 10px;">JavaScript 前端性能</a> <a href="/tags/前端性能/" style="font-size: 10px;">前端性能</a> <a href="/tags/感悟/" style="font-size: 10px;">感悟</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
