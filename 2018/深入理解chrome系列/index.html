@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="zuichu">
 <meta property="og:description" content="前情概要说起来这也是最近调试chrom浏览器遇到的问题，一度怀疑是页面自身的问题，深究了好久，其实也是页面自身的问题，内存泄露严重，导致发现chrome浏览器的单窗口页面打开占用最大内存竟然是这么点儿。可算是功夫不负有心人，在这上面真的是耗费了很大的精力，差点儿在此吐血身亡—-  内存泄露 javascript具有自动垃圾收集机制，也就是说，执行环境会负责管理代码执行过程中的使用的内存。而在C和C">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-15T08:36:40.250Z">
+<meta property="og:updated_time" content="2018-09-27T07:26:42.062Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解chrome之最大内存占用">
 <meta name="twitter:description" content="前情概要说起来这也是最近调试chrom浏览器遇到的问题，一度怀疑是页面自身的问题，深究了好久，其实也是页面自身的问题，内存泄露严重，导致发现chrome浏览器的单窗口页面打开占用最大内存竟然是这么点儿。可算是功夫不负有心人，在这上面真的是耗费了很大的精力，差点儿在此吐血身亡—-  内存泄露 javascript具有自动垃圾收集机制，也就是说，执行环境会负责管理代码执行过程中的使用的内存。而在C和C">
@@ -117,7 +117,7 @@
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2018-09-15
+          <i class="fa fa-calendar"></i>  2018-09-27
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -148,10 +148,11 @@
 <h3 id="干货来了"><a href="#干货来了" class="headerlink" title="干货来了"></a>干货来了</h3><p>导致问题出现的原因的罪魁祸首就是内存泄露。由于跟踪整个问题，导致好几天没有睡好觉，客户那边的催的紧，一开始没有发现问题的所在，最后发现了一个规律，在前一天晚上，服务器上将一个有可视化页面的chrome的窗口打开，到第二天早上毫无意外的发现chrome窗口的可视化页面变成黑屏，点击页面无任何响应，终于在第三天发现一个瞬间，chrome窗口突然无响应，然后出现页面崩溃字样，由于计算机设置了高对比度，导致崩溃页面本来是白色的额，看起来变成黑色的了。</p>
 <p>于是转战研究chrome浏览器页面崩溃原因。在chrome 56版本发现，当页面运行内存到达1.4G左右时候页面出现卡顿，紧接着弹出页面崩溃字样，在chrome 64的高版本中发现页面运行内存可以达到3.5G开始出现卡顿，崩溃现象。于是问题迎刃而解，升级chrome的版本吧。</p>
 <p>这时候回过头来看，一个页面最后占用的运行内存到1.4G多么可怕的内存泄露，看来页面优化势在必行，必须改造再改造。</p>
+<p>工作中发现：<br>chrome 56.0.2924.87版本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function add(a,b,c,)&#123;</span><br><span class="line">    //对这之类传参会报语法错误，逗号后面无参数会出错</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2018年09月15日 16:36</p>
+        <p>最后更新： 2018年09月27日 15:26</p>
         <p>原始链接： <a class="post-url" href="/2018/深入理解chrome系列/" title="深入理解chrome之最大内存占用">http://yoursite.com/2018/深入理解chrome系列/</a></p>
         <footer>
             <a href="http://yoursite.com">
